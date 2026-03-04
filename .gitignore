@@ -1,0 +1,18 @@
+# Python Bytecode
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Data and Models
+data/*
+model_checkpoints/*
+!data/.gitkeep
+!model_checkpoints/.gitkeep
+
+# Environments (Optional but recommended)
+.venv/
+env/
+venv/
+
+# Filetypes
+*.ipynb
