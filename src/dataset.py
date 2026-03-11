@@ -1,9 +1,11 @@
 import os
+import random
 import torch
 from torch.utils.data import Dataset
 from PIL import Image
 import numpy as np
 import torchvision.transforms as T
+import torchvision.transforms.functional as TF
 
 class SegmentationDataset(Dataset):
     def __init__(self, root_dir, mode='trainval', transform=None):
@@ -38,7 +40,7 @@ class SegmentationDataset(Dataset):
         if self.mode == 'trainval':
             image, mask = self.data[idx]
             if self.transform:
-                image = self.transform(image)
+                image, mask = self.transform(image, mask)
             return image, mask
         else:
             img_name = self.filenames[idx]
@@ -46,7 +48,36 @@ class SegmentationDataset(Dataset):
             w,h = image.size
             image = image.resize((300, 300), Image.BILINEAR)
             if self.transform:
-                image = self.transform(image)
+                image, mask = self.transform(image, mask)
             else:
                 image = T.ToTensor()(image)
             return img_name, image, (w,h)
+        
+class StrongAugmentation:
+    def __call__(self, image, mask):
+
+        if random.random() > 0.5:
+            image = TF.hflip(image)
+            mask = TF.hflip(mask)
+
+        if random.random() > 0.5:
+            image = TF.vflip(image)
+            mask = TF.vflip(mask)
+
+        angle = random.uniform(-20, 20)
+        image = TF.rotate(image, angle)
+        mask = TF.rotate(mask, angle, interpolation=TF.InterpolationMode.NEAREST)
+
+        image = TF.adjust_brightness(image, random.uniform(0.8,1.2))
+        image = TF.adjust_contrast(image, random.uniform(0.8,1.2))
+
+        # Gaussian noise
+        if random.random() > 0.5:
+            noise = torch.randn_like(image) * 0.05
+            image = torch.clamp(image + noise, 0, 1)
+
+        # Blur
+        if random.random() > 0.5:
+            image = TF.gaussian_blur(image, kernel_size=3)
+
+        return image, mask
