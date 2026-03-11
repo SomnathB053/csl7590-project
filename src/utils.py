@@ -18,10 +18,16 @@ def calculate_dice(preds, targets, num_classes=21):
     return torch.tensor(dice_scores).mean().item()
 
 
-def calculate_flops(model):
+def calculate_flops(model, device="cpu"):
+    model = model.to(device)
     model.eval()
-    input_tensor = torch.randn(1, 3, 512, 512)
-    flops = FlopCountAnalysis(model, input_tensor)
+
+    with torch.no_grad():
+        # 304 is closest multiple of 16 to 300
+        input_tensor = torch.randn(1, 3, 300, 300).to(device)
+
+        flops = FlopCountAnalysis(model, input_tensor)
+
     return flops.total()
 
 def save_model(model, directory="model_checkpoints", filename="model.pth"):

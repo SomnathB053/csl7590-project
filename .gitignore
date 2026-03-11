@@ -6,8 +6,10 @@ __pycache__/
 # Data and Models
 data/*
 model_checkpoints/*
+17_output/*
 !data/.gitkeep
 !model_checkpoints/.gitkeep
+!17_output/.gitkeep
 
 # Environments (Optional but recommended)
 .venv/

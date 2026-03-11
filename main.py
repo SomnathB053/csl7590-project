@@ -58,5 +58,5 @@ run_inference(model= model,
               test_loader=test_loader,
               folder_name= "17_output" )
 
-flops = calculate_flops(model)
+flops = calculate_flops(model,device=device)
 print(f"Total FLOPs: {flops:.2e}")
