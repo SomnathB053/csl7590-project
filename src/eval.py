@@ -5,9 +5,9 @@ from PIL import Image
 import numpy as np
 from torch.utils.data import DataLoader
 
-from dataset import SegmentationDataset
-from model import SegmentationModel
-from utils import color_map
+from src.dataset import SegmentationDataset
+from src.model import SegmentationModel
+from src.utils import color_map
 
 
 def run_inference(model, test_loader, folder_name, model_path='model_checkpoints/model.pth'):

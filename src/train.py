@@ -3,7 +3,7 @@ import torch.nn as nn
 from tqdm import tqdm
 import os
 
-from utils import calculate_dice
+from src.utils import calculate_dice
 
 def train_model(model, device, train_loader, val_loader, epochs=30, lr=1e-3, patience=5):
     model.to(device)

@@ -50,5 +50,3 @@ class SegmentationDataset(Dataset):
             else:
                 image = T.ToTensor()(image)
             return img_name, image, (w,h)
-
-
